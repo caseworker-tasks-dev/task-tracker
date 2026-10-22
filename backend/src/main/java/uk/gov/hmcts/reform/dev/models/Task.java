@@ -14,6 +14,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
 
 @Entity
@@ -42,8 +43,8 @@ public class Task {
 
     @CreationTimestamp
     @Column(updatable = false)
-    private OffsetDateTime createdAt;
+    private Instant createdAt;
 
     @UpdateTimestamp
-    private OffsetDateTime updatedAt;
+    private Instant updatedAt;
 }
