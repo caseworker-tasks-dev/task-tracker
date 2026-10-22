@@ -41,6 +41,8 @@ spring:
       maxLifetime: 7200000
       connectionTimeout: 30000
   jpa:
+    hibernate:
+      ddl-auto: validate
     properties:
       hibernate:
         jdbc:
