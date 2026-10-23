@@ -7,6 +7,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import uk.gov.hmcts.reform.dev.dto.CreateTaskRequest;
 import uk.gov.hmcts.reform.dev.dto.TaskResponse;
 import uk.gov.hmcts.reform.dev.exceptions.TaskNotFoundException;
@@ -97,7 +98,7 @@ class TaskServiceTest {
         when(taskRepository.findById(1L)).thenReturn(Optional.of(existing));
         when(taskRepository.saveAndFlush(existing)).thenReturn(existing);
 
-        TaskResponse response = taskService.updateStatus(1L, TaskStatus.DONE);
+        TaskResponse response = taskService.updateStatus(1L, TaskStatus.DONE, 0L);
 
         assertThat(response.status()).isEqualTo(TaskStatus.DONE);
         verify(taskRepository).saveAndFlush(existing);
@@ -108,8 +109,21 @@ class TaskServiceTest {
     void updateStatusThrowsWhenMissing() {
         when(taskRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> taskService.updateStatus(99L, TaskStatus.DONE))
+        assertThatThrownBy(() -> taskService.updateStatus(99L, TaskStatus.DONE, 0L))
             .isInstanceOf(TaskNotFoundException.class);
+        verify(taskRepository, never()).saveAndFlush(any());
+    }
+
+    @DisplayName("Should reject the update and save nothing when the version is out of date")
+    @Test
+    void updateStatusThrowsWhenVersionIsStale() {
+        Task existing = task(1L, "Review case");
+        existing.setVersion(3L);
+        when(taskRepository.findById(1L)).thenReturn(Optional.of(existing));
+
+        assertThatThrownBy(() -> taskService.updateStatus(1L, TaskStatus.DONE, 2L))
+            .isInstanceOf(ObjectOptimisticLockingFailureException.class);
+        assertThat(existing.getStatus()).isEqualTo(TaskStatus.TODO);
         verify(taskRepository, never()).saveAndFlush(any());
     }
 
@@ -140,6 +154,7 @@ class TaskServiceTest {
         task.setTitle(title);
         task.setStatus(TaskStatus.TODO);
         task.setDueDate(DUE_DATE);
+        task.setVersion(0L);
         return task;
     }
 }

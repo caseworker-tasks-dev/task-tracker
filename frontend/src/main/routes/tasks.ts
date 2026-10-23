@@ -162,6 +162,7 @@ router.get('/:id/status', async (req, res) => {
 
 router.post('/:id/status', async (req, res) => {
   const status: TaskStatus | undefined = isTaskStatus(req.body.status) ? req.body.status : undefined;
+  const version = /^\d+$/.test(field(req.body.version)) ? Number(req.body.version) : undefined;
   if (!status) {
     const task = await findTask(req.params.id, res);
     if (task) {
@@ -171,7 +172,7 @@ router.post('/:id/status', async (req, res) => {
   }
 
   try {
-    await updateTaskStatus(req.params.id, status);
+    await updateTaskStatus(req.params.id, status, version);
   } catch (err) {
     if (apiStatus(err) === 404) {
       return renderTaskNotFound(res);

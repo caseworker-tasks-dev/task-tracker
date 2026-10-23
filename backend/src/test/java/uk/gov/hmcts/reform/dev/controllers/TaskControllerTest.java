@@ -110,10 +110,10 @@ class TaskControllerTest {
     @DisplayName("PATCH /tasks/{id}/status should return 200 with the updated task")
     @Test
     void updateStatusReturns200() throws Exception {
-        when(taskService.updateStatus(1L, TaskStatus.DONE)).thenReturn(response(1L, TaskStatus.DONE));
+        when(taskService.updateStatus(1L, TaskStatus.DONE, 0L)).thenReturn(response(1L, TaskStatus.DONE));
 
         mockMvc.perform(patch("/tasks/1/status").contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"status\":\"DONE\"}"))
+                            .content("{\"status\":\"DONE\",\"version\":0}"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.status").value("DONE"));
     }
@@ -121,21 +121,21 @@ class TaskControllerTest {
     @DisplayName("PATCH /tasks/{id}/status should return 404 when the task does not exist")
     @Test
     void updateStatusReturns404() throws Exception {
-        when(taskService.updateStatus(999L, TaskStatus.DONE)).thenThrow(new TaskNotFoundException(999L));
+        when(taskService.updateStatus(999L, TaskStatus.DONE, 0L)).thenThrow(new TaskNotFoundException(999L));
 
         mockMvc.perform(patch("/tasks/999/status").contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"status\":\"DONE\"}"))
+                            .content("{\"status\":\"DONE\",\"version\":0}"))
             .andExpect(status().isNotFound());
     }
 
     @DisplayName("PATCH /tasks/{id}/status should return 409 when someone else changed the task first")
     @Test
     void updateStatusReturns409OnConcurrentUpdate() throws Exception {
-        when(taskService.updateStatus(1L, TaskStatus.DONE))
+        when(taskService.updateStatus(1L, TaskStatus.DONE, 0L))
             .thenThrow(new ObjectOptimisticLockingFailureException(Task.class, 1L));
 
         mockMvc.perform(patch("/tasks/1/status").contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"status\":\"DONE\"}"))
+                            .content("{\"status\":\"DONE\",\"version\":0}"))
             .andExpect(status().isConflict())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
             .andExpect(jsonPath("$.detail").value("Task was changed by someone else. Reload it and try again."));
@@ -212,12 +212,13 @@ class TaskControllerTest {
             .andExpect(jsonPath("$.errors").doesNotExist());
     }
 
-    @DisplayName("PATCH /tasks/{id}/status should return 400 when status is missing")
+    @DisplayName("PATCH /tasks/{id}/status should return 400 when status and version are missing")
     @Test
     void updateStatusReturns400ForMissingStatus() throws Exception {
         mockMvc.perform(patch("/tasks/1/status").contentType(MediaType.APPLICATION_JSON).content("{}"))
             .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.errors.status").value("must not be null"));
+            .andExpect(jsonPath("$.errors.status").value("must not be null"))
+            .andExpect(jsonPath("$.errors.version").value("must not be null"));
 
         verifyNoInteractions(taskService);
     }
@@ -226,7 +227,7 @@ class TaskControllerTest {
     @Test
     void updateStatusReturns400ForUnknownStatus() throws Exception {
         mockMvc.perform(patch("/tasks/1/status").contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"status\":\"BLOCKED\"}"))
+                            .content("{\"status\":\"BLOCKED\",\"version\":0}"))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.errors.status").value("must be one of [TODO, IN_PROGRESS, DONE]"));
     }

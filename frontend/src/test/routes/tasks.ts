@@ -225,11 +225,12 @@ describe('POST /tasks/:id/status', () => {
   test('updates the status and redirects to the task', async () => {
     api.updateTaskStatus.mockResolvedValue(task({ status: 'DONE' }));
 
-    const res = await postForm('/tasks/7/status', '/tasks/7/status', { status: 'DONE' }, 303);
+    api.getTask.mockResolvedValue(task({ version: 4 }));
+
+    const res = await postForm('/tasks/7/status', '/tasks/7/status', { status: 'DONE', version: '4' }, 303);
 
     expect(res.headers.location).toBe('/tasks/7');
-
-    expect(api.updateTaskStatus).toHaveBeenCalledWith('7', 'DONE');
+    expect(api.updateTaskStatus).toHaveBeenCalledWith('7', 'DONE', 4);
   });
 
   test('asks for a status when none is chosen', async () => {
@@ -239,12 +240,23 @@ describe('POST /tasks/:id/status', () => {
     expect(api.updateTaskStatus).not.toHaveBeenCalled();
   });
 
-  test('explains a conflicting change when the API returns 409', async () => {
+  test('puts the version the user loaded in the form', async () => {
+    api.getTask.mockResolvedValue(task({ version: 4 }));
+
+    const res = await request(app).get('/tasks/7/status').expect(200);
+
+    expect(res.text).toContain('<input type="hidden" name="version" value="4">');
+  });
+
+  test('explains a conflicting change and offers the latest version when the API returns 409', async () => {
     api.updateTaskStatus.mockRejectedValue(apiError(409));
+    api.getTask.mockResolvedValueOnce(task({ version: 4 })).mockResolvedValueOnce(task({ version: 5 }));
 
-    const res = await postForm('/tasks/7/status', '/tasks/7/status', { status: 'DONE' }, 409);
+    const res = await postForm('/tasks/7/status', '/tasks/7/status', { status: 'DONE', version: '4' }, 409);
 
+    expect(api.updateTaskStatus).toHaveBeenCalledWith('7', 'DONE', 4);
     expect(res.text).toContain('This task was changed by someone else');
+    expect(res.text).toContain('<input type="hidden" name="version" value="5">');
   });
 });
 

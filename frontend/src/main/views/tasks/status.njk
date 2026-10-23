@@ -20,6 +20,7 @@
 
       <form method="post" action="/tasks/{{ task.id }}/status" novalidate>
         {{ csrfProtection(csrfToken) }}
+        <input type="hidden" name="version" value="{{ task.version }}">
 
         {% set statusItems = [] %}
         {% for status in statuses %}

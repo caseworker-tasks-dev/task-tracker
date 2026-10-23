@@ -40,8 +40,8 @@ export async function createTask(payload: CreateTaskPayload): Promise<Task> {
   return response.data;
 }
 
-export async function updateTaskStatus(id: string, status: TaskStatus | undefined): Promise<Task> {
-  const response = await client.patch<Task>(`/tasks/${encodeURIComponent(id)}/status`, { status });
+export async function updateTaskStatus(id: string, status: TaskStatus, version: number | undefined): Promise<Task> {
+  const response = await client.patch<Task>(`/tasks/${encodeURIComponent(id)}/status`, { status, version });
   return response.data;
 }
 

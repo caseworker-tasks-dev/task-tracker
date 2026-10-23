@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.dev.services;
 
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.reform.dev.dto.CreateTaskRequest;
@@ -42,8 +43,11 @@ public class TaskService {
         return TaskResponse.from(getTask(id));
     }
 
-    public TaskResponse updateStatus(Long id, TaskStatus status) {
+    public TaskResponse updateStatus(Long id, TaskStatus status, Long expectedVersion) {
         Task task = getTask(id);
+        if (!task.getVersion().equals(expectedVersion)) {
+            throw new ObjectOptimisticLockingFailureException(Task.class, id);
+        }
         task.setStatus(status);
         return TaskResponse.from(taskRepository.saveAndFlush(task));
     }

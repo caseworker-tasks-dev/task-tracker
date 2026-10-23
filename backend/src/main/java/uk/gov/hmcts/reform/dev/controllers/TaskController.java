@@ -88,11 +88,15 @@ public class TaskController {
     }
 
     @PatchMapping("/{id}/status")
-    @Operation(summary = "Update a task's status", description = "Changes only the status; other fields are unchanged.")
+    @Operation(
+        summary = "Update a task's status",
+        description = "Changes only the status; other fields are unchanged. Send the version from your last read "
+            + "of the task: if someone has changed it since, the update is rejected with 409."
+    )
     @ApiResponse(responseCode = "200", description = "Status updated")
     @ApiResponse(
         responseCode = "400",
-        description = "Status missing or not one of TODO, IN_PROGRESS, DONE",
+        description = "Status or version missing, or status not one of TODO, IN_PROGRESS, DONE",
         content = @Content(mediaType = PROBLEM_JSON, schema = @Schema(implementation = ProblemDetail.class))
     )
     @ApiResponse(
@@ -100,9 +104,14 @@ public class TaskController {
         description = "No task with that ID",
         content = @Content(mediaType = PROBLEM_JSON, schema = @Schema(implementation = ProblemDetail.class))
     )
+    @ApiResponse(
+        responseCode = "409",
+        description = "The task was changed after the version you sent; reload it and try again",
+        content = @Content(mediaType = PROBLEM_JSON, schema = @Schema(implementation = ProblemDetail.class))
+    )
     public ResponseEntity<TaskResponse> updateStatus(@Parameter(description = "Task ID") @PathVariable Long id,
                                                      @Valid @RequestBody UpdateStatusRequest request) {
-        return ok(taskService.updateStatus(id, request.status()));
+        return ok(taskService.updateStatus(id, request.status(), request.version()));
     }
 
     @DeleteMapping("/{id}")

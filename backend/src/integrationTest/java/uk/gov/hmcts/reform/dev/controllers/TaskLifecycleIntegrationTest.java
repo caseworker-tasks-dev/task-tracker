@@ -51,13 +51,18 @@ class TaskLifecycleIntegrationTest {
             .andExpect(jsonPath("$.dueDate").value("2099-01-01T09:00:00Z"));
 
         mockMvc.perform(patch("/tasks/{id}/status", id).contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"status\":\"DONE\"}"))
+                            .content("{\"status\":\"DONE\",\"version\":0}"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.status").value("DONE"))
             .andExpect(jsonPath("$.version").value(1));
 
+        mockMvc.perform(patch("/tasks/{id}/status", id).contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"status\":\"IN_PROGRESS\",\"version\":0}"))
+            .andExpect(status().isConflict());
+
         mockMvc.perform(get("/tasks/{id}", id))
-            .andExpect(jsonPath("$.status").value("DONE"));
+            .andExpect(jsonPath("$.status").value("DONE"))
+            .andExpect(jsonPath("$.version").value(1));
 
         mockMvc.perform(delete("/tasks/{id}", id))
             .andExpect(status().isNoContent());
