@@ -1,5 +1,7 @@
 {% extends "govuk/template.njk" %}
 
+{% block pageTitle %}{% if errorSummary and errorSummary | length %}Error: {% endif %}{{ pageTitle }} – {{ serviceName }}{% endblock %}
+
 {% block head %}
   {% include "webpack/css.njk" %}
 {% endblock %}
