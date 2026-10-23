@@ -1,0 +1,43 @@
+{% extends "template.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "macros/csrf.njk" import csrfProtection %}
+
+{% set pageTitle = "Change status" %}
+
+{% block beforeContent %}
+  {{ govukBackLink({ text: "Back", href: "/tasks/" + task.id }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorSummary | length %}
+        {{ govukErrorSummary({ titleText: "There is a problem", errorList: errorSummary }) }}
+      {% endif %}
+
+      <form method="post" action="/tasks/{{ task.id }}/status" novalidate>
+        {{ csrfProtection(csrfToken) }}
+
+        {% set statusItems = [] %}
+        {% for status in statuses %}
+          {% set statusItems = (statusItems.push({ value: status.value, text: status.text, checked: selected == status.value }), statusItems) %}
+        {% endfor %}
+        {{ govukRadios({
+          idPrefix: "status",
+          name: "status",
+          fieldset: {
+            legend: { text: "Change status", isPageHeading: true, classes: "govuk-fieldset__legend--l" }
+          },
+          hint: { text: task.title },
+          items: statusItems,
+          errorMessage: { text: errors.status } if errors.status else false
+        }) }}
+
+        {{ govukButton({ text: "Save status" }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

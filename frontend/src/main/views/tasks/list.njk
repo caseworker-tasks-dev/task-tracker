@@ -1,0 +1,42 @@
+{% extends "template.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% set pageTitle = "Tasks" %}
+
+{% block content %}
+  {% if flash %}
+    {{ govukNotificationBanner({ type: "success", text: flash }) }}
+  {% endif %}
+
+  <h1 class="govuk-heading-l">Tasks</h1>
+
+  {{ govukButton({ text: "Create task", href: "/tasks/new" }) }}
+
+  {% if tasks | length %}
+    {% set rows = [] %}
+    {% for task in tasks %}
+      {% set titleHtml %}<a class="govuk-link" href="/tasks/{{ task.id }}">{{ task.title }}</a>{% endset %}
+      {% set statusHtml %}
+        {{ govukTag({ text: task.tag.text, classes: task.tag.classes }) }}
+        {% if task.overdue %}{{ govukTag({ text: "Overdue", classes: "govuk-tag--red" }) }}{% endif %}
+      {% endset %}
+      {% set rows = (rows.push([
+        { html: titleHtml },
+        { html: statusHtml },
+        { text: task.dueDateText }
+      ]), rows) %}
+    {% endfor %}
+
+    {{ govukTable({
+      caption: "Your tasks, earliest due first",
+      captionClasses: "govuk-visually-hidden",
+      head: [{ text: "Title" }, { text: "Status" }, { text: "Due" }],
+      rows: rows
+    }) }}
+  {% else %}
+    <p class="govuk-body">You have no tasks.</p>
+  {% endif %}
+{% endblock %}

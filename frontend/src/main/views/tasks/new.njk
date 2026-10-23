@@ -1,0 +1,92 @@
+{% extends "template.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "macros/csrf.njk" import csrfProtection %}
+
+{% set pageTitle = "Create a task" %}
+
+
+{% block beforeContent %}
+  {{ govukBackLink({ text: "Back to tasks", href: "/tasks" }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorSummary | length %}
+        {{ govukErrorSummary({ titleText: "There is a problem", errorList: errorSummary }) }}
+      {% endif %}
+
+      <h1 class="govuk-heading-l">Create a task</h1>
+
+      <form method="post" action="/tasks" novalidate>
+        {{ csrfProtection(csrfToken) }}
+
+        {{ govukInput({
+          id: "title",
+          name: "title",
+          label: { text: "Title", classes: "govuk-label--s" },
+          value: values.title,
+          errorMessage: { text: errors.title } if errors.title else false,
+          spellcheck: true
+        }) }}
+
+        {{ govukCharacterCount({
+          id: "description",
+          name: "description",
+          label: { text: "Description (optional)", classes: "govuk-label--s" },
+          value: values.description,
+          maxlength: 4000,
+          rows: 5,
+          errorMessage: { text: errors.description } if errors.description else false
+        }) }}
+
+        {% set statusItems = [] %}
+        {% for status in statuses %}
+          {% set statusItems = (statusItems.push({ value: status.value, text: status.text, checked: values.status == status.value }), statusItems) %}
+        {% endfor %}
+        {{ govukRadios({
+          idPrefix: "status",
+          name: "status",
+          fieldset: { legend: { text: "Status (optional)", classes: "govuk-fieldset__legend--s" } },
+          hint: { text: "If you do not choose a status, the task will be set to To do." },
+          items: statusItems,
+          errorMessage: { text: errors.status } if errors.status else false
+        }) }}
+
+        {% set partClass = " govuk-input--error" if errors.dueDate else "" %}
+        {{ govukDateInput({
+          id: "dueDate",
+          namePrefix: "dueDate",
+          fieldset: { legend: { text: "Due date", classes: "govuk-fieldset__legend--s" } },
+          hint: { text: "For example, 27 3 2030" },
+          errorMessage: { text: errors.dueDate } if errors.dueDate else false,
+          items: [
+            { name: "day", label: "Day", value: values.day, classes: "govuk-input--width-2" + (partClass if "day" in invalidParts else "") },
+            { name: "month", label: "Month", value: values.month, classes: "govuk-input--width-2" + (partClass if "month" in invalidParts else "") },
+            { name: "year", label: "Year", value: values.year, classes: "govuk-input--width-4" + (partClass if "year" in invalidParts else "") }
+          ]
+        }) }}
+
+        {{ govukInput({
+          id: "dueTime",
+          name: "dueTime",
+          label: { text: "Due time", classes: "govuk-label--s" },
+          hint: { text: "Use the 24-hour clock, for example 14:30. UK time." },
+          value: values.time,
+          classes: "govuk-input--width-5",
+          autocomplete: "off",
+          spellcheck: false,
+          errorMessage: { text: errors.dueTime } if errors.dueTime else false
+        }) }}
+
+        {{ govukButton({ text: "Create task" }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

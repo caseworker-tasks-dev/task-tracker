@@ -1,0 +1,44 @@
+{% extends "template.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% set pageTitle = task.title %}
+
+{% block beforeContent %}
+  {{ govukBackLink({ text: "Back to tasks", href: "/tasks" }) }}
+{% endblock %}
+
+{% block content %}
+  {% if flash %}
+    {{ govukNotificationBanner({ type: "success", text: flash }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ task.title }}</h1>
+
+      {% set statusHtml %}
+        {{ govukTag({ text: task.tag.text, classes: task.tag.classes }) }}
+        {% if task.overdue %}{{ govukTag({ text: "Overdue", classes: "govuk-tag--red" }) }}{% endif %}
+      {% endset %}
+
+      {{ govukSummaryList({
+        rows: [
+          { key: { text: "Description" }, value: { text: task.description or "None" } },
+          { key: { text: "Status" }, value: { html: statusHtml } },
+          { key: { text: "Due" }, value: { text: task.dueDateText } },
+          { key: { text: "Created" }, value: { text: task.createdAtText } },
+          { key: { text: "Last updated" }, value: { text: task.updatedAtText } }
+        ]
+      }) }}
+
+      <div class="govuk-button-group">
+        {{ govukButton({ text: "Change status", href: "/tasks/" + task.id + "/status" }) }}
+        {{ govukButton({ text: "Delete task", href: "/tasks/" + task.id + "/delete", classes: "govuk-button--secondary" }) }}
+      </div>
+    </div>
+  </div>
+{% endblock %}

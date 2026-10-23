@@ -1,0 +1,30 @@
+{% extends "template.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "macros/csrf.njk" import csrfProtection %}
+
+{% set pageTitle = "Delete task" %}
+
+{% block beforeContent %}
+  {{ govukBackLink({ text: "Back", href: "/tasks/" + task.id }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <span class="govuk-caption-l">{{ task.title }}</span>
+      <h1 class="govuk-heading-l">Are you sure you want to delete this task?</h1>
+
+      {{ govukWarningText({ text: "You cannot undo this." }) }}
+
+      <form method="post" action="/tasks/{{ task.id }}/delete" novalidate>
+        {{ csrfProtection(csrfToken) }}
+        <div class="govuk-button-group">
+          {{ govukButton({ text: "Delete task", classes: "govuk-button--warning" }) }}
+          <a class="govuk-link" href="/tasks/{{ task.id }}">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
