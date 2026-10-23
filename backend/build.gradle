@@ -184,6 +184,7 @@ dependencies {
   
   runtimeOnly 'org.postgresql:postgresql'
   testRuntimeOnly 'com.h2database:h2'
+  integrationTestRuntimeOnly 'com.h2database:h2'
 }
 
 bootJar {
@@ -196,6 +197,10 @@ bootJar {
 
 // Gradle 7.x issue, workaround from: https://github.com/gradle/gradle/issues/17236#issuecomment-894768083
 rootProject.tasks.named("processSmokeTestResources") {
+  duplicatesStrategy = 'include'
+}
+
+rootProject.tasks.named("processIntegrationTestResources") {
   duplicatesStrategy = 'include'
 }
 
