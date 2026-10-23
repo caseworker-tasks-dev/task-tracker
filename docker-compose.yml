@@ -9,6 +9,36 @@ services:
       POSTGRES_PASSWORD: task_tracker
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U task_tracker -d task_tracker"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  backend:
+    build: ./backend
+    ports:
+      - "4000:4000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: task_tracker
+      DB_USER_NAME: task_tracker
+      DB_PASSWORD: task_tracker
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3100:3100"
+    environment:
+      BACKEND_URL: http://backend:4000
+      CSRF_SECRET: ${CSRF_SECRET:-local-only-not-a-real-secret}
+    stop_grace_period: 10s
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:
