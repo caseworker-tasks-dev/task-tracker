@@ -1,4 +1,7 @@
 # HMCTS Dev Test Backend
+
+[![Backend CI](https://github.com/caseworker-tasks-dev/task-tracker/actions/workflows/backend-ci.yml/badge.svg?branch=main)](https://github.com/caseworker-tasks-dev/task-tracker/actions/workflows/backend-ci.yml)
+
 This will be the backend for the brand new HMCTS case management system. As a potential candidate we are leaving
 this in your hands. Please refer to the brief for the complete list of tasks! Complete as much as you can and be
 as creative as you want.
