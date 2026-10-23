@@ -12,6 +12,7 @@ public record TaskResponse(
     String description,
     TaskStatus status,
     OffsetDateTime dueDate,
+    Long version,
     Instant createdAt,
     Instant updatedAt
 ) {
@@ -23,6 +24,7 @@ public record TaskResponse(
             task.getDescription(),
             task.getStatus(),
             task.getDueDate(),
+            task.getVersion(),
             task.getCreatedAt(),
             task.getUpdatedAt()
         );

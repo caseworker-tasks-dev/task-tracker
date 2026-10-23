@@ -6,9 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import uk.gov.hmcts.reform.dev.TestcontainersConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -20,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Import(TestcontainersConfiguration.class)
 class TaskLifecycleIntegrationTest {
 
     @Autowired
@@ -34,6 +37,7 @@ class TaskLifecycleIntegrationTest {
                                                              + "\"dueDate\":\"2099-01-01T09:00:00Z\"}"))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.status").value("TODO"))
+            .andExpect(jsonPath("$.version").value(0))
             .andExpect(jsonPath("$.createdAt").exists())
             .andReturn();
 
@@ -49,7 +53,8 @@ class TaskLifecycleIntegrationTest {
         mockMvc.perform(patch("/tasks/{id}/status", id).contentType(MediaType.APPLICATION_JSON)
                             .content("{\"status\":\"DONE\"}"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.status").value("DONE"));
+            .andExpect(jsonPath("$.status").value("DONE"))
+            .andExpect(jsonPath("$.version").value(1));
 
         mockMvc.perform(get("/tasks/{id}", id))
             .andExpect(jsonPath("$.status").value("DONE"));

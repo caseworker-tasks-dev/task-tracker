@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,13 +39,18 @@ public class Task {
     @Column(nullable = false, length = 20)
     private TaskStatus status;
 
-    @Column(name = "due_date_time", nullable = false)
+    @Column(nullable = false)
     private OffsetDateTime dueDate;
 
+    @Version
+    @Column(nullable = false)
+    private Long version;
+
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
     @UpdateTimestamp
+    @Column(nullable = false)
     private Instant updatedAt;
 }

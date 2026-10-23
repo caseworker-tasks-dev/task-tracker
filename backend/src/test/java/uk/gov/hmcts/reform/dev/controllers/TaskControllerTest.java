@@ -6,11 +6,13 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import uk.gov.hmcts.reform.dev.dto.CreateTaskRequest;
 import uk.gov.hmcts.reform.dev.dto.TaskResponse;
 import uk.gov.hmcts.reform.dev.exceptions.TaskNotFoundException;
+import uk.gov.hmcts.reform.dev.models.Task;
 import uk.gov.hmcts.reform.dev.models.TaskStatus;
 import uk.gov.hmcts.reform.dev.services.TaskService;
 
@@ -126,6 +128,19 @@ class TaskControllerTest {
             .andExpect(status().isNotFound());
     }
 
+    @DisplayName("PATCH /tasks/{id}/status should return 409 when someone else changed the task first")
+    @Test
+    void updateStatusReturns409OnConcurrentUpdate() throws Exception {
+        when(taskService.updateStatus(1L, TaskStatus.DONE))
+            .thenThrow(new ObjectOptimisticLockingFailureException(Task.class, 1L));
+
+        mockMvc.perform(patch("/tasks/1/status").contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"status\":\"DONE\"}"))
+            .andExpect(status().isConflict())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.detail").value("Task was changed by someone else. Reload it and try again."));
+    }
+
     @DisplayName("DELETE /tasks/{id} should return 204 with no body")
     @Test
     void deleteReturns204() throws Exception {
@@ -225,6 +240,6 @@ class TaskControllerTest {
 
     private static TaskResponse response(Long id, TaskStatus status) {
         Instant now = Instant.parse("2026-10-23T00:00:00Z");
-        return new TaskResponse(id, "Review case", null, status, DUE_DATE, now, now);
+        return new TaskResponse(id, "Review case", null, status, DUE_DATE, 0L, now, now);
     }
 }
