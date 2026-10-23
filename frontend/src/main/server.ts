@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 import * as fs from 'fs';
+import * as http from 'http';
 import * as https from 'https';
 import * as path from 'path';
 
 import { app } from './app';
 
-let httpsServer: https.Server | null = null;
+let server: http.Server | https.Server | null = null;
 
 // used by shutdownCheck in readinessChecks
 app.locals.shutdown = false;
@@ -19,12 +20,12 @@ if (app.locals.ENV === 'development') {
     cert: fs.readFileSync(path.join(sslDirectory, 'localhost.crt')),
     key: fs.readFileSync(path.join(sslDirectory, 'localhost.key')),
   };
-  httpsServer = https.createServer(sslOptions, app);
-  httpsServer.listen(port, () => {
+  server = https.createServer(sslOptions, app);
+  server.listen(port, () => {
     console.log(`Application started: https://localhost:${port}`);
   });
 } else {
-  app.listen(port, () => {
+  server = app.listen(port, () => {
     console.log(`Application started: http://localhost:${port}`);
   });
 }
@@ -37,9 +38,11 @@ function gracefulShutdownHandler(signal: string) {
   setTimeout(() => {
     console.log('Shutting down application');
     // Close server if it's running
-    httpsServer?.close(() => {
-      console.log('HTTPS server closed');
+    server?.close(() => {
+      console.log('Server closed');
+      process.exit(0);
     });
+    server?.closeIdleConnections();
   }, 4000);
 }
 

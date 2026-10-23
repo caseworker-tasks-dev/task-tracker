@@ -1,0 +1,11 @@
+node_modules/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/install-state.gz
+.pnp.cjs
+.pnp.loader.mjs
+src/main/public/
+src/main/views/govuk/
+src/main/resources/localhost-ssl/
+coverage/
+dist/
