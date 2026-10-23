@@ -3894,6 +3894,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chokidar@npm:^3.3.0":
+  version: 3.6.0
+  resolution: "chokidar@npm:3.6.0"
+  dependencies:
+    anymatch: "npm:~3.1.2"
+    braces: "npm:~3.0.2"
+    fsevents: "npm:~2.3.2"
+    glob-parent: "npm:~5.1.2"
+    is-binary-path: "npm:~2.1.0"
+    is-glob: "npm:~4.0.1"
+    normalize-path: "npm:~3.0.0"
+    readdirp: "npm:~3.6.0"
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  checksum: 10/c327fb07704443f8d15f7b4a7ce93b2f0bc0e6cea07ec28a7570aa22cd51fcf0379df589403976ea956c369f25aa82d84561947e227cd925902e1751371658df
+  languageName: node
+  linkType: hard
+
 "chokidar@npm:^3.5.2":
   version: 3.5.3
   resolution: "chokidar@npm:3.5.3"
@@ -4435,6 +4454,15 @@ __metadata:
     shebang-command: "npm:^2.0.0"
     which: "npm:^2.0.1"
   checksum: 10/e1a13869d2f57d974de0d9ef7acbf69dc6937db20b918525a01dacb5032129bd552d290d886d981e99f1b624cb03657084cc87bd40f115c07ecf376821c729ce
+  languageName: node
+  linkType: hard
+
+"csrf-csrf@npm:^4.0.3":
+  version: 4.0.3
+  resolution: "csrf-csrf@npm:4.0.3"
+  dependencies:
+    http-errors: "npm:^2.0.0"
+  checksum: 10/456c33b637aaf56d19dfb77cae760f15bc14b773089482ee47e62ebb603189095ef01ad4dc21f1e8eb1c27078d36fc3e367175d210fb8f0581c5fd6c011c1c6c
   languageName: node
   linkType: hard
 
@@ -6192,6 +6220,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"helmet@npm:^8.3.0":
+  version: 8.3.0
+  resolution: "helmet@npm:8.3.0"
+  checksum: 10/077db98df8f8ea749aeab0f56eabe1f37d0ca2ae475c095bc30adf850fe714ea67469dc94b6a6e1b786cde25a40452784e20b728e59c63baa2b18ba12518a6fe
+  languageName: node
+  linkType: hard
+
 "hmcts-dev-test-frontend@workspace:.":
   version: 0.0.0-use.local
   resolution: "hmcts-dev-test-frontend@workspace:."
@@ -6208,9 +6243,11 @@ __metadata:
     "@types/supertest": "npm:^7.2.0"
     "@typescript-eslint/parser": "npm:^8.62.1"
     axios: "npm:^1.18.1"
+    chokidar: "npm:^3.3.0"
     codeceptjs: "npm:^4.0.8"
     cookie-parser: "npm:^1.4.7"
     copy-webpack-plugin: "npm:^14.0.0"
+    csrf-csrf: "npm:^4.0.3"
     css-loader: "npm:^7.1.4"
     eslint: "npm:^10.6.0"
     eslint-config-prettier: "npm:^10.1.8"
@@ -6221,6 +6258,7 @@ __metadata:
     glob: "npm:^13.0.6"
     globals: "npm:^17.7.0"
     govuk-frontend: "npm:^6.3.0"
+    helmet: "npm:^8.3.0"
     html-webpack-plugin: "npm:^5.6.7"
     husky: "npm:^9.1.7"
     jest: "npm:^30.4.2"

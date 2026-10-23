@@ -40,9 +40,11 @@ const RAW_RUNTIME_STATE =
           ["@types/supertest", "npm:7.2.0"],\
           ["@typescript-eslint/parser", "virtual:3a02cceef93055271d0890b855d0c93a770c9c876ee9b808cf9e23d8d1b8581b5b6efcfb80a9768d650dfa22f93777eca81ae9ef4de2301b22a7619649eb692a#npm:8.62.1"],\
           ["axios", "npm:1.7.2"],\
+          ["chokidar", "npm:3.6.0"],\
           ["codeceptjs", "virtual:3a02cceef93055271d0890b855d0c93a770c9c876ee9b808cf9e23d8d1b8581b5b6efcfb80a9768d650dfa22f93777eca81ae9ef4de2301b22a7619649eb692a#npm:4.0.8"],\
           ["cookie-parser", "npm:1.4.7"],\
           ["copy-webpack-plugin", "virtual:3a02cceef93055271d0890b855d0c93a770c9c876ee9b808cf9e23d8d1b8581b5b6efcfb80a9768d650dfa22f93777eca81ae9ef4de2301b22a7619649eb692a#npm:14.0.0"],\
+          ["csrf-csrf", "npm:4.0.3"],\
           ["css-loader", "virtual:3a02cceef93055271d0890b855d0c93a770c9c876ee9b808cf9e23d8d1b8581b5b6efcfb80a9768d650dfa22f93777eca81ae9ef4de2301b22a7619649eb692a#npm:7.1.4"],\
           ["eslint", "virtual:3a02cceef93055271d0890b855d0c93a770c9c876ee9b808cf9e23d8d1b8581b5b6efcfb80a9768d650dfa22f93777eca81ae9ef4de2301b22a7619649eb692a#npm:10.6.0"],\
           ["eslint-config-prettier", "virtual:3a02cceef93055271d0890b855d0c93a770c9c876ee9b808cf9e23d8d1b8581b5b6efcfb80a9768d650dfa22f93777eca81ae9ef4de2301b22a7619649eb692a#npm:10.1.8"],\
@@ -53,6 +55,7 @@ const RAW_RUNTIME_STATE =
           ["glob", "npm:13.0.6"],\
           ["globals", "npm:17.7.0"],\
           ["govuk-frontend", "npm:6.3.0"],\
+          ["helmet", "npm:8.3.0"],\
           ["hmcts-dev-test-frontend", "workspace:."],\
           ["html-webpack-plugin", "virtual:3a02cceef93055271d0890b855d0c93a770c9c876ee9b808cf9e23d8d1b8581b5b6efcfb80a9768d650dfa22f93777eca81ae9ef4de2301b22a7619649eb692a#npm:5.6.7"],\
           ["husky", "npm:9.1.7"],\
@@ -5477,6 +5480,21 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
+      ["npm:3.6.0", {\
+        "packageLocation": "./.yarn/cache/chokidar-npm-3.6.0-3c413a828f-c327fb0770.zip/node_modules/chokidar/",\
+        "packageDependencies": [\
+          ["anymatch", "npm:3.1.3"],\
+          ["braces", "npm:3.0.2"],\
+          ["chokidar", "npm:3.6.0"],\
+          ["fsevents", "patch:fsevents@npm%3A2.3.2#optional!builtin<compat/fsevents>::version=2.3.2&hash=df0bf1"],\
+          ["glob-parent", "npm:5.1.2"],\
+          ["is-binary-path", "npm:2.1.0"],\
+          ["is-glob", "npm:4.0.3"],\
+          ["normalize-path", "npm:3.0.0"],\
+          ["readdirp", "npm:3.6.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["npm:4.0.3", {\
         "packageLocation": "./.yarn/cache/chokidar-npm-4.0.3-962354fbb4-bf2a575ea5.zip/node_modules/chokidar/",\
         "packageDependencies": [\
@@ -6083,6 +6101,16 @@ const RAW_RUNTIME_STATE =
           ["path-key", "npm:3.1.1"],\
           ["shebang-command", "npm:2.0.0"],\
           ["which", "npm:2.0.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["csrf-csrf", [\
+      ["npm:4.0.3", {\
+        "packageLocation": "./.yarn/cache/csrf-csrf-npm-4.0.3-fbb6638185-456c33b637.zip/node_modules/csrf-csrf/",\
+        "packageDependencies": [\
+          ["csrf-csrf", "npm:4.0.3"],\
+          ["http-errors", "npm:2.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -8161,6 +8189,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["helmet", [\
+      ["npm:8.3.0", {\
+        "packageLocation": "./.yarn/cache/helmet-npm-8.3.0-010a4aefcf-077db98df8.zip/node_modules/helmet/",\
+        "packageDependencies": [\
+          ["helmet", "npm:8.3.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["hmcts-dev-test-frontend", [\
       ["workspace:.", {\
         "packageLocation": "./",\
@@ -8177,9 +8214,11 @@ const RAW_RUNTIME_STATE =
           ["@types/supertest", "npm:7.2.0"],\
           ["@typescript-eslint/parser", "virtual:3a02cceef93055271d0890b855d0c93a770c9c876ee9b808cf9e23d8d1b8581b5b6efcfb80a9768d650dfa22f93777eca81ae9ef4de2301b22a7619649eb692a#npm:8.62.1"],\
           ["axios", "npm:1.7.2"],\
+          ["chokidar", "npm:3.6.0"],\
           ["codeceptjs", "virtual:3a02cceef93055271d0890b855d0c93a770c9c876ee9b808cf9e23d8d1b8581b5b6efcfb80a9768d650dfa22f93777eca81ae9ef4de2301b22a7619649eb692a#npm:4.0.8"],\
           ["cookie-parser", "npm:1.4.7"],\
           ["copy-webpack-plugin", "virtual:3a02cceef93055271d0890b855d0c93a770c9c876ee9b808cf9e23d8d1b8581b5b6efcfb80a9768d650dfa22f93777eca81ae9ef4de2301b22a7619649eb692a#npm:14.0.0"],\
+          ["csrf-csrf", "npm:4.0.3"],\
           ["css-loader", "virtual:3a02cceef93055271d0890b855d0c93a770c9c876ee9b808cf9e23d8d1b8581b5b6efcfb80a9768d650dfa22f93777eca81ae9ef4de2301b22a7619649eb692a#npm:7.1.4"],\
           ["eslint", "virtual:3a02cceef93055271d0890b855d0c93a770c9c876ee9b808cf9e23d8d1b8581b5b6efcfb80a9768d650dfa22f93777eca81ae9ef4de2301b22a7619649eb692a#npm:10.6.0"],\
           ["eslint-config-prettier", "virtual:3a02cceef93055271d0890b855d0c93a770c9c876ee9b808cf9e23d8d1b8581b5b6efcfb80a9768d650dfa22f93777eca81ae9ef4de2301b22a7619649eb692a#npm:10.1.8"],\
@@ -8190,6 +8229,7 @@ const RAW_RUNTIME_STATE =
           ["glob", "npm:13.0.6"],\
           ["globals", "npm:17.7.0"],\
           ["govuk-frontend", "npm:6.3.0"],\
+          ["helmet", "npm:8.3.0"],\
           ["hmcts-dev-test-frontend", "workspace:."],\
           ["html-webpack-plugin", "virtual:3a02cceef93055271d0890b855d0c93a770c9c876ee9b808cf9e23d8d1b8581b5b6efcfb80a9768d650dfa22f93777eca81ae9ef4de2301b22a7619649eb692a#npm:5.6.7"],\
           ["husky", "npm:9.1.7"],\
@@ -10764,7 +10804,7 @@ const RAW_RUNTIME_STATE =
           ["@types/chokidar", null],\
           ["a-sync-waterfall", "npm:1.0.1"],\
           ["asap", "npm:2.0.6"],\
-          ["chokidar", null],\
+          ["chokidar", "npm:3.6.0"],\
           ["commander", "npm:5.1.0"],\
           ["nunjucks", "virtual:3a02cceef93055271d0890b855d0c93a770c9c876ee9b808cf9e23d8d1b8581b5b6efcfb80a9768d650dfa22f93777eca81ae9ef4de2301b22a7619649eb692a#npm:3.2.4"]\
         ],\
