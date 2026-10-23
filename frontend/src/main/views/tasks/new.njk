@@ -12,7 +12,9 @@
 
 
 {% block beforeContent %}
-  {{ govukBackLink({ text: "Back to tasks", href: "/tasks" }) }}
+  <nav aria-label="Back">
+    {{ govukBackLink({ text: "Back to tasks", href: "/tasks" }) }}
+  </nav>
 {% endblock %}
 
 {% block content %}

@@ -7,7 +7,9 @@
 {% set pageTitle = "Delete task" %}
 
 {% block beforeContent %}
-  {{ govukBackLink({ text: "Back", href: "/tasks/" + task.id }) }}
+  <nav aria-label="Back">
+    {{ govukBackLink({ text: "Back", href: "/tasks/" + task.id }) }}
+  </nav>
 {% endblock %}
 
 {% block content %}
